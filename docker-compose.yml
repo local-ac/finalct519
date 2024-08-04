@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"     # HTTP
+      - "443:443"   # HTTPS
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs:/etc/letsencrypt/live/ct519_757.ck2all.com  # Path to SSL certificates
+      - ./nginx/html:/var/www/certbot  # Path for ACME challenge
+    depends_on:
+      - web1
+      - web2
+      - web3
+      - web4
+
+  web1:
+    image: httpd:latest
+    ports:
+      - "8002:80"
+    volumes:
+      - ./web1:/usr/local/apache2/htdocs/
+
+  web2:
+    image: httpd:latest
+    ports:
+      - "8004:80"
+    volumes:
+      - ./web2:/usr/local/apache2/htdocs/
+
+  web3:
+    image: httpd:latest
+    ports:
+      - "8006:80"
+    volumes:
+      - ./web3:/usr/local/apache2/htdocs/
+
+  web4:
+    image: httpd:latest
+    ports:
+      - "80:80"  # Serve index.html on port 80
+    volumes:
+      - ./web4:/usr/local/apache2/htdocs/
